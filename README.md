@@ -11,7 +11,7 @@
 
 ## 📖 About
 
-**BakeEase** has been completely upgraded from legacy PHP/MySQL to the modern **MERN Stack** (MongoDB, Express.js, React, Node.js). It digitises local Mumbai bakeries by providing a rich storefront, custom cake builder studio, online order checkout (Click & Collect or Delivery), real-time order status tracking, a Purble Palace-inspired **BakeMaster** arcade mini-game, and a comprehensive **Admin Management Suite**.
+**BakeEase** is a modern, full-stack **MERN** (MongoDB, Express.js, React, Node.js) web platform designed to digitise local artisanal bakeries. It provides an intuitive storefront, custom cake builder studio, online order checkout (Click & Collect or Delivery), real-time order status tracking, a Purble Palace-inspired **BakeMaster** arcade mini-game, and a comprehensive **Admin Management Suite**.
 
 ---
 
@@ -35,7 +35,7 @@ Backend (REST API)
 ├── Node.js LTS + Express.js 4 + Mongoose 8
 ├── JSON Web Token (JWT) + bcryptjs password hashing
 ├── In-Memory Fallback: Auto-starts embedded MongoDB if local instance is unavailable
-└── Auto-Seeder: Migrated all 22 products, categories, reviews, users from bakeease.sql
+└── Auto-Seeder: Pre-seeded catalogue products, categories, reviews, users, coupons, and inventory
 ```
 
 ---
@@ -83,7 +83,7 @@ npm run dev
 
 ```
 ├── client/                     # React Frontend (Vite + TailwindCSS)
-│   ├── public/images/          # Product and ingredient assets (71 files)
+│   ├── public/images/          # Product and ingredient assets
 │   ├── src/
 │   │   ├── components/         # Navbar, Footer, CartDrawer, AuthModal, etc.
 │   │   ├── context/            # AuthContext, CartContext
@@ -98,17 +98,11 @@ npm run dev
 │   ├── middleware/             # auth.js (JWT protect & adminOnly)
 │   ├── models/                 # User, Product, Category, Order, Review, Inventory, Coupon, ContactMessage, Setting
 │   ├── routes/                 # auth, products, orders, categories, reviews, inventory, coupons, dashboard, reports, customers
-│   ├── seed.js                 # Seed script with SQL data
+│   ├── seed.js                 # Database seeding script with bakery catalogue
 │   ├── server.js               # Express application entry point
 │   ├── .env                    # Environment variables
 │   └── package.json
 │
-├── legacy/                     # Archived Legacy Code (PHP & HTML for reference)
-│   ├── server-php/
-│   ├── client-html/
-│   └── admin-html/
-│
-├── bakeease.sql                # Original MySQL dump reference
 ├── howtorun.txt                # Quick execution guide
 └── package.json                # Monorepo scripts
 ```

@@ -35,7 +35,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static images from client public/images and legacy images
+// Serve static images from client public/images and assets
 const clientImagesPath = path.join(__dirname, '../client/public/images');
 const fallbackImagesPath = path.join(__dirname, '../client/images');
 app.use('/images', express.static(clientImagesPath));
@@ -57,26 +57,12 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/settings', settingRoutes);
 
-// Backward compatibility alias for legacy PHP requests if any: /bakeease/server/api/*
-app.use('/bakeease/server/api/auth.php', authRoutes);
-app.use('/bakeease/server/api/categories.php', categoryRoutes);
-app.use('/bakeease/server/api/products.php', productRoutes);
-app.use('/bakeease/server/api/orders.php', orderRoutes);
-app.use('/bakeease/server/api/reviews.php', reviewRoutes);
-app.use('/bakeease/server/api/inventory.php', inventoryRoutes);
-app.use('/bakeease/server/api/coupons.php', couponRoutes);
-app.use('/bakeease/server/api/contact.php', contactRoutes);
-app.use('/bakeease/server/api/dashboard.php', dashboardRoutes);
-app.use('/bakeease/server/api/reports.php', reportRoutes);
-app.use('/bakeease/server/api/customers.php', customerRoutes);
-app.use('/bakeease/server/api/settings.php', settingRoutes);
-
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
     app: 'BakeEase MERN Backend',
-    version: '2.0.0',
+    version: '1.0.0',
     timestamp: new Date().toISOString(),
   });
 });
