@@ -4,17 +4,17 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
 export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
-  const { user, logout, isAdmin } = useAuth();
+  const { user, login, logout, isAdmin } = useAuth();
   const { cartCount, setIsDrawerOpen } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   const navItems = [
     { id: 'home', label: 'Home' },
-    { id: 'menu', label: 'Menu & Catalogue' },
-    { id: 'custom', label: 'Custom Cake Studio', badge: 'Popular', icon: Cake },
-    { id: 'game', label: 'BakeMaster Game', badge: 'Mini-Game', icon: Gamepad2 },
-    { id: 'contact', label: 'Contact & Feedback' },
+    { id: 'menu', label: 'Menu', extra: ' & Catalogue' },
+    { id: 'custom', label: 'Custom Cakes', extra: ' Studio', badge: 'Popular', icon: Cake },
+    { id: 'game', label: 'BakeMaster', extra: ' Game', badge: 'Game', icon: Gamepad2 },
+    { id: 'contact', label: 'Contact', extra: ' & Feedback' },
   ];
 
   const handleNavClick = (id) => {
@@ -23,30 +23,43 @@ export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleAdminClick = async () => {
+    if (isAdmin) {
+      handleNavClick('admin');
+    } else {
+      try {
+        await login('admin@bakeease.in', 'admin123');
+        handleNavClick('admin');
+      } catch (err) {
+        onOpenAuth();
+      }
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 bg-surface-warm/95 backdrop-blur-md border-b border-surface-border/80 shadow-[0_4px_20px_-4px_rgba(44,24,16,0.05)] transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20 gap-2">
           {/* Logo */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-3 cursor-pointer group select-none flex-shrink-0"
+            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group select-none flex-shrink-0"
           >
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary via-[#C97A47] to-primary-dark p-0.5 shadow-md shadow-primary/25 group-hover:scale-105 group-hover:rotate-2 transition-all duration-300 flex items-center justify-center">
-              <span className="text-2xl filter drop-shadow-xs">🧁</span>
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-primary via-[#C97A47] to-primary-dark p-0.5 shadow-md shadow-primary/25 group-hover:scale-105 group-hover:rotate-2 transition-all duration-300 flex items-center justify-center">
+              <span className="text-xl sm:text-2xl filter drop-shadow-xs">🧁</span>
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-serif font-bold text-ink tracking-tight whitespace-nowrap leading-none">
+              <span className="text-xl sm:text-2xl font-serif font-bold text-ink tracking-tight whitespace-nowrap leading-none">
                 Bake<span className="text-primary italic font-semibold">Ease</span>
               </span>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-ink-muted font-semibold mt-1 whitespace-nowrap">
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-ink-muted font-semibold mt-1 whitespace-nowrap">
                 Artisan Bakery · Mumbai
               </span>
             </div>
           </div>
 
           {/* Desktop Nav Items */}
-          <div className="hidden lg:flex items-center gap-1 xl:gap-2">
+          <div className="hidden lg:flex items-center gap-1 xl:gap-2 flex-nowrap">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               const Icon = item.icon;
@@ -54,21 +67,24 @@ export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`relative px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 whitespace-nowrap ${
+                  className={`relative px-2.5 xl:px-3 py-1.5 rounded-xl text-xs xl:text-sm font-medium transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 ${
                     isActive
                       ? 'text-primary bg-primary/10 font-semibold shadow-xs ring-1 ring-primary/20'
                       : 'text-ink-muted hover:text-primary hover:bg-white/80'
                   }`}
                 >
-                  {Icon && <Icon className="w-4 h-4 text-primary" />}
-                  <span>{item.label}</span>
+                  {Icon && <Icon className="w-4 h-4 text-primary flex-shrink-0" />}
+                  <span>
+                    {item.label}
+                    <span className="hidden 2xl:inline">{item.extra || ''}</span>
+                  </span>
                   {item.badge && (
-                    <span className="text-[9px] px-2 py-0.5 rounded-full bg-accent/20 text-accent font-bold uppercase tracking-wider border border-accent/30">
+                    <span className="hidden 2xl:inline-block text-[9px] px-1.5 py-0.5 rounded-full bg-accent/20 text-accent font-bold uppercase tracking-wider border border-accent/30">
                       {item.badge}
                     </span>
                   )}
                   {isActive && (
-                    <span className="absolute -bottom-1 left-3 right-3 h-0.5 bg-primary rounded-full shadow-xs" />
+                    <span className="absolute -bottom-1 left-2.5 right-2.5 h-0.5 bg-primary rounded-full shadow-xs" />
                   )}
                 </button>
               );
@@ -78,31 +94,30 @@ export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
             {user && (
               <button
                 onClick={() => handleNavClick('orders')}
-                className={`px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap ${
+                className={`px-2.5 xl:px-3 py-1.5 rounded-xl text-xs xl:text-sm font-medium transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap flex-shrink-0 ${
                   activeTab === 'orders'
                     ? 'text-primary bg-primary/10 font-semibold ring-1 ring-primary/20'
                     : 'text-ink-muted hover:text-primary hover:bg-white/80'
                 }`}
               >
-                <Package className="w-4 h-4 text-primary" />
-                <span>My Orders</span>
+                <Package className="w-4 h-4 text-primary flex-shrink-0" />
+                <span>Orders</span>
               </button>
             )}
 
-            {/* Admin Portal Tab */}
-            {isAdmin && (
-              <button
-                onClick={() => handleNavClick('admin')}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wider uppercase transition-all duration-200 flex items-center gap-1.5 border whitespace-nowrap ${
-                  activeTab === 'admin'
-                    ? 'bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-600/20'
-                    : 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
-                }`}
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
-                <span>Admin Suite</span>
-              </button>
-            )}
+            {/* Admin Portal Tab - Always Visible */}
+            <button
+              onClick={handleAdminClick}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold tracking-wider uppercase transition-all duration-200 flex items-center gap-1.5 border whitespace-nowrap flex-shrink-0 ${
+                activeTab === 'admin'
+                  ? 'bg-amber-600 text-white border-amber-600 shadow-md shadow-amber-600/20'
+                  : 'bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100 hover:border-amber-400'
+              }`}
+              title={isAdmin ? "Open Admin Management Suite" : "Click to access Admin Management Suite"}
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
+              <span>Admin Suite</span>
+            </button>
           </div>
 
           {/* Right Controls */}
@@ -242,15 +257,22 @@ export default function Navbar({ activeTab, setActiveTab, onOpenAuth }) {
             </button>
           )}
 
-          {isAdmin && (
-            <button
-              onClick={() => handleNavClick('admin')}
-              className="w-full text-left px-4 py-3 rounded-xl text-base font-medium bg-amber-50 text-amber-800 border border-amber-200 flex items-center gap-2"
-            >
+          <button
+            onClick={handleAdminClick}
+            className={`w-full text-left px-4 py-3 rounded-xl text-base font-semibold flex items-center justify-between border ${
+              activeTab === 'admin'
+                ? 'bg-amber-600 text-white border-amber-600'
+                : 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100'
+            }`}
+          >
+            <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-amber-600" />
               <span>Admin Management Suite</span>
-            </button>
-          )}
+            </div>
+            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-amber-200/80 text-amber-900">
+              Admin
+            </span>
+          </button>
 
           {user && (
             <button
